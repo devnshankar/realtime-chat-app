@@ -1,10 +1,10 @@
-import React from "react";
-import { Tab, Nav, Button, Modal } from "react-bootstrap";
-import Conversations from "./Conversations";
-import Contacts from "./Contacts";
-import NewConversationModal from "./NewConversationModal"; // Make sure the import path is correct
-import NewContactModal from "./NewContactModal";
 import PropTypes from "prop-types";
+import React from "react";
+import { Button, Modal, Nav, Tab } from "react-bootstrap";
+import Contacts from "./Contacts";
+import Conversations from "./Conversations";
+import NewContactModal from "./NewContactModal";
+import NewConversationModal from "./NewConversationModal"; // Make sure the import path is correct
 
 const CONVERSATIONS_KEY = "conversations";
 const CONTACTS_KEY = "contacts";
@@ -19,7 +19,7 @@ export default function Sidebar({ id }) {
   }
 
   return (
-    <div style={{ width: "250px" }} className="d-flex flex-column">
+    <div style={{ width: "250px" }} className="d-flex flex-column border">
       <Tab.Container activeKey={activeTab} onSelect={setActiveTab}>
         <Nav>
           <Nav.Item>
@@ -40,8 +40,14 @@ export default function Sidebar({ id }) {
         <div className="p-2 border-top border-right small">
           Your Id: <span className="text-muted">{id}</span>
         </div>
-        <Button onClick={() => setModalOpen(true)} className="rounded">
+        <Button onClick={() => setModalOpen(true)} className="rounded m-1">
           New {conversationsOpen ? "Conversation" : "Contact"}
+        </Button>
+        <Button
+          className="rounded border-danger bg-danger m-1 mt-0"
+          onClick={() => clearLocalStorageWithPrefix("whatsapp-clone-")}
+        >
+          Clear LocalStorage
         </Button>
       </Tab.Container>
 
@@ -60,3 +66,14 @@ export default function Sidebar({ id }) {
 Sidebar.propTypes = {
   id: PropTypes.any.isRequired,
 };
+
+
+function clearLocalStorageWithPrefix(prefix) {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith(prefix)) {
+      localStorage.removeItem(key);
+      window.location.reload();
+    }
+  }
+}
